@@ -19,7 +19,7 @@ Corresponding author:
 **Nabil Messaoudi**  
 ICOSI Laboratory  
 Abbès Laghrour University of Khenchela, Algeria  
-Email: nabil.messaoudi@univ-khenchela.dz
+Email: messaoudi.nabil@univ-khenchela.dz
 
 ---
 
