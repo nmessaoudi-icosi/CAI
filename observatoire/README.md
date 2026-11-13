@@ -1,14 +1,14 @@
-# Observatoire SI-HCPN — interface française
+# SI-HCPN Observatory — English interface
 
-Version statique du tableau de bord ICOSI, prévue pour https://nmessaoudi-icosi.github.io/CAI/.
+Static version of the ICOSI dashboard, intended for https://nmessaoudi-icosi.github.io/CAI/.
 
-## Activer la publication
-Dans le dépôt CAI, ouvrir **Settings → Pages → Build and deployment → Source → GitHub Actions**.
-Dans **Actions → Publier l’observatoire SI-HCPN → Run workflow**, sélectionner `main` et lancer le workflow si nécessaire.
-L’URL est utilisable seulement après une exécution réussie du déploiement.
+## Enable deployment
+In the CAI repository, open **Settings → Pages → Build and deployment → Source → GitHub Actions**.
+Under **Actions → Deploy the SI-HCPN Observatory → Run workflow**, select `main` and run the workflow if needed.
+The URL is available only after a successful deployment.
 
-## Développement
-Node.js 22.13 ou plus récent :
+## Development
+Node.js 22.13 or later:
 ```
 cd observatoire
 npm ci
@@ -17,16 +17,16 @@ npm run dev
 npm run build
 ```
 
-## Données et limites
-- Interface publique ; aucune connexion ChatGPT requise sur GitHub Pages.
-- Aucune donnée expérimentale réelle incluse : démonstration explicitement fictive.
-- Imports CSV/JSON/ZIP traités dans le navigateur ; les sessions sont stockées localement et exportables en JSON. Les données de l’ancien domaine ne sont pas transférées automatiquement : exporter puis restaurer la session.
-- RF reste la référence valide. N/D signifie absent/non calculé, jamais zéro.
-- Les totaux par actif proviennent de `asset_totals.csv` (asset,discharge,shift). Les traces cumulatives brutes ne sont pas additionnées automatiquement.
-- `metrics.csv` : f1,precision,recall,auc,peaks,ens,ome,shift. Scores dans [0,1].
-- `sgrid_history.csv` : step,demand,supply,v2gdischarge.
-- `final_sgrid.csv` : dernière ligne de l’état final.
-- Rapport PDF via l’impression du navigateur (Enregistrer au format PDF).
-- Classement : poids modifiables, normalisation min–max, exécutions complètes seulement ; même scénario et nombre de pas requis. La méthodologie complète est accessible dans l’interface.
+## Data and limitations
+- Public interface; no ChatGPT sign-in required on GitHub Pages.
+- No real experimental data included: the demo is explicitly fictional.
+- CSV/JSON/ZIP imports are processed in the browser; sessions are stored locally and can be exported as JSON. Data from the previous domain are not transferred automatically: export and then restore the session.
+- RF remains the valid reference. N/A means missing/not calculated, never zero.
+- Per-asset totals come from `asset_totals.csv` (asset,discharge,shift). Raw cumulative traces are not automatically summed.
+- `metrics.csv`: f1,precision,recall,auc,peaks,ens,ome,shift. Scores in [0,1].
+- `sgrid_history.csv`: step,demand,supply,v2gdischarge.
+- `final_sgrid.csv`: last row of the final state.
+- PDF report through browser printing (Save as PDF).
+- Ranking: adjustable weights, min–max normalization, complete runs only; the same scenario and step count are required. The full methodology is available in the interface.
 
-Le tableau de bord ne constitue pas un dépôt des artefacts expérimentaux de l’article.
+The dashboard is not a repository of the experimental artifacts associated with the paper.
