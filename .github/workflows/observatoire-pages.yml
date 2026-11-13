@@ -1,4 +1,4 @@
-name: Publier l’observatoire SI-HCPN
+name: Deploy the SI-HCPN Observatory
 on:
   push:
     branches: [main]
@@ -37,6 +37,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Déployer
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
