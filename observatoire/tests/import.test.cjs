@@ -1,0 +1,11 @@
+const fs=require('fs'),ts=require('typescript'),vm=require('vm'),assert=require('node:assert/strict');
+let source=fs.readFileSync('src/App.tsx','utf8');source=source.slice(source.indexOf('type Run='),source.indexOf('export default function Page'))+'\n globalThis.api={csv,ingest,num,unpack};';
+const code=ts.transpile(source,{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS});const sandbox={TextDecoder,DataView,Blob,Response,DecompressionStream,Number,Date};vm.createContext(sandbox);vm.runInContext(code,sandbox);const {csv,ingest,num,unpack}=sandbox.api;
+assert.equal(num(''),null);assert.equal(num('0'),0);assert.equal(num('0,924'),.924);
+assert.equal(csv('asset;discharge;shift\n"Bâtiments; A";12;0\n')[0].asset,'Bâtiments; A');
+assert.throws(()=>csv('a;b\n1;2;3'));
+const r=ingest([{name:'metrics.csv',text:'f1;auc;ens;ome;peaks\n0,924;0,985;0;;3'},{name:'sgrid_history.csv',text:'step;demand;supply\n0;500;600\n1;550;600'},{name:'final_sgrid.csv',text:'demand;supply;mode\n550;600;NORMAL'},{name:'Residdischarged.csv',text:'rid;discharge;cumdisch\n1;5;5\n1;5;10'},{name:'asset_totals.csv',text:'asset;discharge;shift\nRésidences;10;0'}],'RF','RF-only',5000);
+assert.equal(r.metrics.f1,.924);assert.equal(r.metrics.ens,0);assert.equal(r.metrics.ome,null);assert.equal(r.history.length,2);assert.equal(r.final.mode,'NORMAL');assert.equal(r.assets.length,1);assert.equal(r.assets[0].discharge,10);assert.equal(r.warnings.length,1);
+assert.equal(ingest([{name:'metrics.csv',text:'f1\n92.4'}],'RF','RF-only',5000).metrics.f1,null);
+assert.equal(ingest([{name:'metrics.json',text:'{"metrics":{"f1":0.95}}'}],'RF','RF-only',5000).metrics.f1,.95);
+(async()=>{const buffer=Buffer.from('UEsDBBQAAAAIAEtTaF2EZknKDwAAAA0AAAAPAAAAcnVuL21ldHJpY3MuY3N2SzO0Ts0r5jLQszSyNgAAUEsBAhQDFAAAAAgAS1NoXYRmScoPAAAADQAAAA8AAAAAAAAAAAAAAIABAAAAAHJ1bi9tZXRyaWNzLmNzdlBLBQYAAAAAAQABAD0AAAA8AAAAAAA=','base64');const entries=await unpack({name:'test.zip',arrayBuffer:async()=>buffer.buffer.slice(buffer.byteOffset,buffer.byteOffset+buffer.byteLength)});assert.equal(entries.length,1);assert.equal(entries[0].text,'f1;ens\n0.92;0');console.log('PASS: empty vs zero, decimal commas, quotes, malformed CSV, metric ranges, JSON, history, final state, no duplicate cumulative sums, compressed ZIP');})().catch(e=>{console.error(e);process.exit(1)});
